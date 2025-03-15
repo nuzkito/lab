@@ -1,0 +1,129 @@
+<style>
+    body {
+        height: 100vh;
+        width: 100vw;
+        margin: 0;
+        overflow: hidden;
+        background-color: #eee;
+    }
+
+    .grid {
+        --columns: 3;
+        --default-item-size: calc((min(100vw, 100vh) - var(--gap) * (var(--columns) + 1)) / var(--columns));
+        --item-size: var(--default-item-size);
+        --margin-tile-size: calc(var(--default-item-size) * var(--columns) + var(--total-gap));
+        --margin-width: calc((var(--margin-tile-size) - var(--gap)) * (var(--columns) - 1));
+        --margin-top: var(--margin-width);
+        --margin-right: var(--margin-width);
+        --margin-bottom: var(--margin-width);
+        --margin-left: var(--margin-width);
+        --gap: 5px;
+        --total-gap: calc(var(--gap) * (var(--columns) + 1));
+        position: absolute;
+        top: calc(-1 * var(--margin-width) + (100vh - var(--default-item-size) * var(--columns) - var(--total-gap)) / 2);
+        left: calc(-1 * var(--margin-width) + (100vw - var(--default-item-size) * var(--columns) - var(--total-gap)) / 2);
+        display: grid;
+        grid-template-columns: var(--margin-left) repeat(var(--columns), var(--item-size)) var(--margin-right);
+        grid-template-rows: var(--margin-top) repeat(var(--columns), var(--item-size)) var(--margin-bottom);
+        gap: var(--gap);
+        transition: grid-template-columns 0.3s ease, grid-template-rows 0.3s ease;
+        box-sizing: border-box;
+
+        &:has(.active) {
+            --active-column: calc(mod(var(--active-index), var(--columns)));
+            --active-row: calc(round(down, var(--active-index) / var(--columns)));
+            --item-size: calc(var(--default-item-size) * var(--columns) + var(--gap) * (var(--columns) - 1));
+            --margin-top: calc((var(--margin-tile-size) - var(--gap)) * (var(--columns) - var(--active-row) - 1));
+            --margin-right: calc((var(--margin-tile-size) - var(--gap)) * var(--active-column));
+            --margin-bottom: calc((var(--margin-tile-size) - var(--gap)) * var(--active-row));
+            --margin-left: calc((var(--margin-tile-size) - var(--gap)) * (var(--columns) - var(--active-column) - 1));
+
+            .grid-item {
+                &:not(.active) {
+                    opacity: 0;
+                }
+            }
+        }
+    }
+
+    .subgrid {
+        aspect-ratio: 1;
+        grid-column: 2 / calc(var(--columns) + 2);
+        grid-row: 2 / calc(var(--columns) + 2);
+        display: grid;
+        grid-template-columns: subgrid;
+        grid-template-rows: subgrid;
+    }
+
+    .grid-item {
+        border-radius: 2px;
+        box-shadow: inset 0 0 2px 1px #0004;
+        transition: opacity 0.3s ease;
+
+        &:nth-child(1) {
+            background-color: hsl(22.21, 98.38%, 69.63%);
+        }
+
+        &:nth-child(2) {
+            background-color: hsl(249.24, 3.35%, 31.6%);
+        }
+
+        &:nth-child(3) {
+            background-color: hsl(214.33, 100%, 59.22%);
+        }
+
+        &:nth-child(4) {
+            background-color: hsl(146.54, 61.11%, 66.41%);
+        }
+
+        &:nth-child(5) {
+            background-color: hsl(26.22, 81.29%, 85.26%);
+        }
+
+        &:nth-child(6) {
+            background-color: hsl(300.69, 46.27%, 69.09%);
+        }
+
+        &:nth-child(7) {
+            background-color: hsl(231.95, 46.21%, 61.29%);
+        }
+
+        &:nth-child(8) {
+            background-color: hsl(139.39, 28.75%, 54.79%);
+        }
+
+        &:nth-child(9) {
+            background-color: hsl(4.15, 53.12%, 45.14%);
+        }
+    }
+</style>
+<div class="grid">
+    <div class="subgrid">
+        <div class="grid-item" data-index="0"></div>
+        <div class="grid-item" data-index="1"></div>
+        <div class="grid-item" data-index="2"></div>
+        <div class="grid-item" data-index="3"></div>
+        <div class="grid-item" data-index="4"></div>
+        <div class="grid-item" data-index="5"></div>
+        <div class="grid-item" data-index="6"></div>
+        <div class="grid-item" data-index="7"></div>
+        <div class="grid-item" data-index="8"></div>
+    </div>
+</div>
+<script>
+    const gridItems = document.querySelectorAll('.grid-item')
+    gridItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const index = Number(item.getAttribute('data-index'))
+            const grid = item.parentElement.parentElement
+
+            if (grid.style.getPropertyValue('--active-index') === '') {
+                grid.style.setProperty('--active-index', index)
+            } else {
+                grid.style.removeProperty('--active-index')
+            }
+
+            item.classList.toggle('active')
+        })
+    });
+</script>
