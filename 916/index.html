@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #000;
+            color: #ffbb5a;
+            font-family: "Glacial Indifference", Carlito, sans-serif;
+            text-transform: uppercase;
+            display: grid;
+            place-items: center;
+            align-content: center;
+            padding-top: 7vh;
+            text-align: center;
+            height: 100vh;
+            width: 100vw;
+            box-sizing: border-box;
+        }
+
+        .touch-the-screen {
+            position: absolute;
+            background-color: #000d;
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 8vw;
+            cursor: pointer;
+
+            &.started {
+                animation: fadeOut 1s forwards;
+                cursor: default;
+            }
+        }
+
+        .title {
+            display: flex;
+        }
+
+        .author {
+
+            font-size: 5.2vw;
+            color: #fdcb96;
+        }
+
+        .date {
+            font-size: 5.2vw;
+            color: #fdcb96;
+        }
+
+        @font-face {
+            font-family: "Glacial Indifference";
+            src: url('GlacialIndifference-Regular.otf') format('opentype');
+        }
+
+        .paused * {
+            animation-play-state: paused !important;
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @media screen and (orientation: landscape) {
+            .landscape {
+                font-size: 32vh;
+                letter-spacing: -0.5vh;
+            }
+
+            .portrait {
+                display: none;
+            }
+
+            .author,
+            .date {
+                display: none;
+            }
+        }
+
+        @media screen and (orientation: portrait) {
+            .title {
+                grid-area: 1 / 1 / 2 / 2;
+            }
+
+            .landscape {
+                writing-mode: sideways-lr;
+                font-size: 32vw;
+                letter-spacing: -0.5vw;
+            }
+
+            .portrait {
+                writing-mode: sideways-lr;
+                font-size: 32vw;
+                letter-spacing: -0.5vw;
+            }
+
+            .landscape {
+                .nine {
+                    animation: fadeOut 0.5s forwards;
+                    animation-delay: 1s;
+                }
+
+                .dots {
+                    animation: fadeOut 0.5s forwards;
+                    animation-delay: 2s;
+                }
+
+                .six {
+                    animation: fadeOut 0.5s forwards;
+                    animation-delay: 3s;
+                }
+
+                .one {
+                    animation: fadeOut 0.5s forwards;
+                    animation-delay: 4s;
+                }
+            }
+
+            .portrait {
+                .nine {
+                    opacity: 0;
+                    animation: fadeIn 0.5s forwards 1.2s;
+                    animation-delay: 5s;
+                }
+
+                .dots {
+                    opacity: 0;
+                    animation: fadeIn 0.5s forwards 1.4s;
+                    animation-delay: 8s;
+                }
+
+                .one {
+                    opacity: 0;
+                    animation: fadeIn 0.5s forwards 1.6s;
+                    animation-delay: 9s;
+                }
+
+                .six {
+                    opacity: 0;
+                    animation: fadeIn 0.5s forwards 1.8s;
+                    animation-delay: 12s;
+                }
+            }
+
+            .author {
+                opacity: 0;
+                animation: fadeIn 0.5s forwards 2s;
+                animation-delay: 18s;
+            }
+
+            .date {
+                opacity: 0;
+                animation: fadeIn 0.5s forwards 2.2s;
+                animation-delay: 21s;
+            }
+        }
+    </style>
+</head>
+
+<body class="paused">
+
+    <audio src="916.mp3"></audio>
+
+    <div class="touch-the-screen">Toca la pantalla</div>
+
+    <span class="title landscape">
+        <span class="one">1</span>
+        <span class="six">6</span>
+        <span class="dots">:</span>
+        <span class="nine">9</span>
+    </span>
+    <span class="title portrait">
+        <span class="nine">9</span>
+        <span class="dots">:</span>
+        <span class="one">1</span>
+        <span class="six">6</span>
+    </span>
+    <span class="author">Fran Hita</span>
+    <span class="date">17/03</span>
+</body>
+
+<script>
+    const start = document.querySelector('.touch-the-screen')
+    const audio = document.querySelector('audio')
+    const mediaQuery = window.matchMedia("(orientation: portrait)")
+    const lastFadeOut = document.querySelector('.landscape .one')
+
+    function play() {
+        document.body.classList.remove('paused')
+
+        lastFadeOut.addEventListener('animationend', () => {
+            audio.currentTime = 0
+            audio.play().catch(() => {
+                console.log('Audio autoplay was prevented')
+                audio.play()
+            })
+        }, {
+            once: true,
+        })
+    }
+
+    function pause() {
+        audio.pause()
+        document.body.classList.add('paused')
+    }
+
+    start.addEventListener('click', () => {
+        start.classList.add('started')
+        play()
+    })
+
+    start.addEventListener('animationend', () => {
+        mediaQuery.addListener(event => {
+            if (event.matches) {
+                play()
+            } else {
+                pause()
+            }
+        })
+    }, {
+        once: true,
+    })
+</script>
+
+</html>
