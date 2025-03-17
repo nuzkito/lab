@@ -1,0 +1,75 @@
+<div class="logo-container">
+    <div class="logo"></div>
+</div>
+
+<style>
+    body {
+        background-color: #299459;
+        display: grid;
+        place-items: center;
+        margin: 0;
+    }
+
+    .logo-container {
+        background-color: #fff;
+        aspect-ratio: 1 / 1;
+        width: 300px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+    }
+
+    .logo {
+        background-color: #299459;
+        width: 8%;
+        height: 60%;
+        position: relative;
+        animation: logo-step-1 500ms forwards;
+        animation-delay: 500ms;
+        container: logo / size;
+        --rotation-angle: 30deg;
+
+        &::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: calc(100cqh * cos(var(--rotation-angle)) + 100cqw * sin(var(--rotation-angle)));
+            background-color: #299459;
+            transform-origin: 100% 0%;
+            animation: logo-step-2 500ms forwards;
+            animation-delay: 1s;
+        }
+
+        &::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: calc(100cqh * cos(var(--rotation-angle)) + 100cqw * sin(var(--rotation-angle)));
+            background-color: #299459;
+            bottom: 0;
+            transform-origin: 0% 100%;
+            animation: logo-step-2 500ms forwards;
+            animation-delay: 1s;
+        }
+    }
+
+    @keyframes logo-step-1 {
+        from {
+            rotate: 0deg;
+        }
+
+        to {
+            rotate: calc(var(--rotation-angle) * -1);
+        }
+    }
+
+    @keyframes logo-step-2 {
+        from {
+            rotate: 0deg;
+        }
+
+        to {
+            rotate: var(--rotation-angle);
+        }
+    }
+</style>
